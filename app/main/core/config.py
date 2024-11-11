@@ -65,14 +65,6 @@ class ConfigClass(BaseSettings):
     EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = int(get_secret("EMAIL_RESET_TOKEN_EXPIRE_HOURS", 48))
     EMAILS_ENABLED: bool = get_secret("EMAILS_ENABLED", True) in ["True", True]
 
-    OPEN_AI_API_KEY: str = get_secret("OPEN_AI_API_KEY","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")
-    OPEN_AI_ORGANISATION_ID:str = get_secret("OPEN_AI_ORGANISATION_ID","org-zxRpKEYx7aJneID5fc2ChIp0")
-    OPEN_AI_PROJECT_ID:str = get_secret("OPEN_AI_PROJECT_ID","proj_gmLDGXUbuhEvYEb6HWNLbJoj")
-    OPEN_AI_URL:str = get_secret("OPEN_AI_URL","https://api.openai.com")
-
-    GEMINI_API_KEY:str = get_secret("GEMINI_API_KEY","AIzaSyDFVvcjEFpGB6BadLDliBhlXmdjo0SuVAM")
-    
-    HUGGING_FACE_API_KEY:str = get_secret("HUGGING_FACE_API_KEY","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")
     # RESET_PASSWORD_LINK: str = get_secret("RESET_PASSWORD_LINK", "https://app.development.koalizz.fr/{}/auth/reset-password")
 
     # Default image size
