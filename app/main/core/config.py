@@ -31,7 +31,7 @@ class ConfigClass(BaseSettings):
 
 
     # Sqlalchemy
-    SQLALCHEMY_DATABASE_URL: str = get_secret("SQLALCHEMY_DATABASE_URL",'postgresql://postgres:postgres@localhost:5432/test_autolocate')
+    SQLALCHEMY_DATABASE_URL: str = get_secret("SQLALCHEMY_DATABASE_URL",'postgresql://admin:kafc6yoUn9B1mo12yg8prvoweaElpjl5@dpg-ctr2a2i3esus73b8v65g-a/tp331_carshop_database')
     # SQLALCHEMY_DATABASE_URL: str = get_secret("SQLALCHEMY_DATABASE_URL", 'postgresql://postgres:postgres@localhost:5432/archive_doc_app')
     SQLALCHEMY_POOL_SIZE: int = 100
     SQLALCHEMY_MAX_OVERFLOW: int = 0
