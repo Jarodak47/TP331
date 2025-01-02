@@ -57,7 +57,7 @@ def register(
         if not avatar:
             raise HTTPException(status_code=404, detail=__("avatar-not-found"))
 
-    if admin and admin.role_uuid == obj_in.role_uuid:
+    if admin:
         raise HTTPException(status_code=409, detail=__("user-email-taken"))
     
     return crud.user.create(db, obj_in)
