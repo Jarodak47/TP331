@@ -40,6 +40,7 @@ Ce projet est une application de gestion de commandes et de paiements. Il permet
    ```bash
    git clone https://github.com/Jarodak47/TP331-backend.git
    cd TP331-backend
+
 2. Créez et activez un environnement virtuel :
     ```bash
     python -m venv venv
@@ -64,3 +65,16 @@ dans le meme repertoire tapez:
 4.  Utilisez les informations ci-dessous pour vous connecter en tant qu'administarteur et commencer á tester:
     - email:  admin@gmail.com
     - password: test1234
+
+## Déploiement
+
+1. Construisez l'image Docker:
+    ```bash
+    docker build -t jarodak47/tp331-backend .
+
+2.  Exécutez le conteneur Docker :
+    ```bash
+    docker run -p 8000:8000 jarodak47/tp331-backend
+
+
+
