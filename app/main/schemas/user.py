@@ -1,6 +1,8 @@
 from datetime import datetime, date
 from typing import List, Optional, Any
-from pydantic import BaseModel, ConfigDict, EmailStr, Json
+# from fastapi.params import Body
+from fastapi import Body
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 from app.main.schemas import DataList
 from app.main.schemas.base import UserAuthentication
@@ -47,7 +49,10 @@ class ValidateAccount(BaseModel):
     email:EmailStr
 
 class User(UserBase):
+    phonenumber: Optional[str] = None
+    address: Optional[str] = None
     uuid: Optional[str] = None
+    role:RoleBase
     date_added: datetime
     date_modified: datetime
 
@@ -65,13 +70,29 @@ class Storage(BaseModel):
     date_added: Optional[datetime] = None
     date_modified: Optional[datetime] = None
 
+class UserSlim(BaseModel):
+    uuid: Optional[str] = None
+    email: EmailStr
+    firstname: str
+    lastname: str
+    is_new_user: Optional[bool] = False
+    # role:RoleBase
+    date_added: datetime
+    date_modified: datetime
+
+    model_config = ConfigDict(from_attributes=True)
 
 class UserProfileResponse(UserBase):
     uuid: Optional[str] = None
     role: RoleBase
+    ok:bool = True
+    clientToken: str ="Ok"  # Ajoutez le token client ici
     date_added: datetime
     date_modified: datetime
     avatar: Optional[Storage] = None
+
+class UserMe(BaseModel):
+    user:UserProfileResponse
 
 
 
@@ -143,7 +164,6 @@ class AdministratorUpdate(AdministratorBase):
     firstname: Optional[str]=None
     lastname: Optional[str]=None
     role_uuid: Optional[str]=None
-    password:Optional[str]=None
     avatar_uuid: Optional[str]=None
     phonenumber: Optional[str]=None
     address: Optional[str]=None
@@ -155,6 +175,8 @@ class AdministratorDelete(BaseModel):
 class AdministratorResponse(AdministratorBase):
     uuid:str
     status:str
+    phonenumber:Optional[str] = None
+    address:str = Body(...)
     avatar : Optional[File]
     role: Roleslim
     date_added: Any

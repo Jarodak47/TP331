@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from .base import TimestampMixin   
+from .base import TimesTampMixin   
 from sqlalchemy import Column,String, DateTime, Text,event
 from datetime import datetime, date
 from sqlalchemy.orm import relationship
@@ -10,7 +10,7 @@ from .db.base_class import Base
 
 
 @dataclass
-class Role(TimestampMixin,Base):
+class Role(TimesTampMixin,Base):
     """
     Database model for storing Role related details
     """

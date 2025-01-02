@@ -4,20 +4,8 @@ from sqlalchemy import Column, ForeignKey, String,DateTime,event,types
 from datetime import datetime
 from sqlalchemy.orm import relationship
 
-from .base import TimestampMixin
+from .base import TimesTampMixin,EnumList
 from .db.base_class import Base
-
-class EnumList(str, Enum):
-    ACTIVED = "ACTIVED"
-    UNACTIVED = "UNACTIVED"
-    DELETED = "DELETED"
-    BLOCKED = "BLOCKED"
-    RENTAL = "RENTAL" #location
-    PURCHASE = "PURCHASE" #achat
-    SALE = "SALE" #vente
-    BOOKING = "BOOKING" #reservation
-    NONE = "NONE" 
-    
 
 # class Reservation(Base):
 #     __tablename__ = 'reservations'
@@ -35,7 +23,7 @@ class EnumList(str, Enum):
 #     date_modified: datetime = Column(DateTime, nullable=False, default=datetime.now())
 
 @dataclass
-class User(TimestampMixin,Base):
+class User(TimesTampMixin,Base):
     """
     User model for storing users related details
     """
@@ -69,7 +57,6 @@ class User(TimestampMixin,Base):
     added_by = relationship("User", foreign_keys=[added_by_uuid], uselist=False)
 
     # reservations = relationship('Reservation', back_populates='user')
-    payments = relationship('Payment', back_populates='user')
     ad_reviews = relationship('AdReview', back_populates='user')
     notifications = relationship('UserNotification', back_populates='user')
 
@@ -77,7 +64,7 @@ class User(TimestampMixin,Base):
         return '<User: uuid: {} email: {}>'.format(self.uuid, self.email)
 
 
-class UserActionValidation(TimestampMixin,Base):
+class UserActionValidation(TimesTampMixin,Base):
     __tablename__ = 'user_action_validations'
 
     uuid: str = Column(String, primary_key=True)

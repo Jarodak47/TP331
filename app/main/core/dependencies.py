@@ -6,7 +6,7 @@ from pydantic import ValidationError
 from sqlalchemy.orm import Session
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi import Request, HTTPException
-
+from fastapi.encoders import jsonable_encoder
 from app.main import models, crud, schemas
 from app.main.core import security
 from app.main.core.config import Config
@@ -83,6 +83,7 @@ class TokenRequired(HTTPBearer):
                 raise HTTPException(status_code=403, detail=__("dependencies-token-invalid"))
             token_data = decode_access_token(credentials.credentials)
             if not token_data:
+                print("+token-data+",token_data)
                 raise HTTPException(status_code=403, detail=__("dependencies-token-invalid"))
 
             if models.BlacklistToken.check_blacklist(db, credentials.credentials):

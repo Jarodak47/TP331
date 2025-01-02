@@ -1,5 +1,5 @@
 
-
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, RootModel
 from typing import Any, List, Optional, Dict
 
@@ -18,13 +18,16 @@ class UserAuthentication(BaseModel):
     message:str
     model_config = ConfigDict(from_attributes=True)
 
+class DateDisplayBase(BaseModel):
+    date_added: datetime
+    date_modified: datetime
 
 class DataList(BaseModel):
     total: int
     pages: int
     current_page: int
     per_page: int
-    data: List[Any] = []
+    data: list[Any] = []
 
     model_config = ConfigDict(from_attributes=True)
 

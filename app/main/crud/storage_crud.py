@@ -29,6 +29,10 @@ class CRUDFile(CRUDBase[File, User, FileAdd]):
         """Retrieve file metadata by public_id."""
         return db.query(Storage).filter(Storage.public_id == public_id).first()
     
+    def get_file_by_url(self,db: Session, url: str) -> Storage:
+        """Retrieve file metadata by public_id."""
+        return db.query(Storage).filter(Storage.url == url).first()
+    
     def get_file_by_uuid(self,db: Session, file_uuid: str) -> Storage:
         """Retrieve file metadata by file_uuid."""
         return db.query(Storage).filter(Storage.uuid == file_uuid).first()
@@ -51,7 +55,7 @@ class CRUDFile(CRUDBase[File, User, FileAdd]):
         
         """Retrieve all file metadata."""
         
-        query = db.query(Storage).filter(Storage.format.not_in(["png", "jpg", ""]))
+        query = db.query(Storage)
         
         if public_id:
             query = query.filter(Storage.public_id == public_id)

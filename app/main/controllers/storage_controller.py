@@ -27,7 +27,7 @@ def upload_file(
         *,
         db: Session = Depends(dependencies.get_db),
         file: UploadFile = File(...),
-        current_user: models.User = Depends(dependencies.TokenRequired(roles=["administrator"]))
+        # current_user: models.User = Depends(dependencies.TokenRequired(roles=["administrator"]))
 ):
     """
     Upload a file.
@@ -106,7 +106,7 @@ def get_file(
     *,
     public_id: str, 
     db: Session = Depends(dependencies.get_db),
-    current_user: models.User = Depends(dependencies.TokenRequired())
+    # current_user: models.User = Depends(dependencies.TokenRequired())
 
     ):
     """

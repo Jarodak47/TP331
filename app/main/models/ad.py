@@ -4,47 +4,48 @@ from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Text, Tabl
 from datetime import datetime
 from sqlalchemy.orm import relationship
 from .db.base_class import Base
-from .base import TimestampMixin
+from .import TimesTampMixin,EnumList
 
 @dataclass
-class Ad(TimestampMixin,Base):
+class Ad(TimesTampMixin,Base):
     __tablename__ = 'ads'
 
     uuid: str = Column(String, primary_key=True, unique=True)
     title: str = Column(String, nullable=False)
     description: str = Column(String, nullable=True)
-    
+    status:str = Column(types.Enum(EnumList), index=True, nullable=False, default=EnumList.NONE)
+
     vehicles = relationship('AdVehicle', back_populates='ad')
-    photos = relationship('AdPhoto', back_populates='ad')
     notification = relationship('Notification', back_populates='ad', uselist=False)
     ad_reviews = relationship('AdReview', back_populates='ad')
 
 @dataclass
-class AdVehicle(TimestampMixin,Base):
+class AdVehicle(TimesTampMixin,Base):
     __tablename__ = 'ad_vehicles'
-
-    ad_uuid: str = Column(String, ForeignKey('ads.uuid'), primary_key=True)
-    vehicle_uuid: str = Column(String, ForeignKey('vehicles.uuid'), primary_key=True)
-
+    uuid: str = Column(String, primary_key=True, unique=True)
+    ad_uuid: str = Column(String, ForeignKey('ads.uuid',onupdate='CASCADE',ondelete='CASCADE'), primary_key=True)
+    vehicle_uuid: str = Column(String, ForeignKey('vehicles.uuid',onupdate='CASCADE',ondelete='CASCADE'), primary_key=True)
+    
+    photos = relationship('AdPhoto', back_populates='ad_vehicle')
     ad = relationship('Ad', back_populates='vehicles')
     vehicle = relationship('Vehicle', back_populates='ads')
 
 @dataclass
-class AdPhoto(TimestampMixin,Base):
+class AdPhoto(TimesTampMixin,Base):
     __tablename__ = 'ad_photos'
+    # uuid: str = Column(String, primary_key=True, unique=True)
+    ad_vehicle_uuid: str = Column(String, ForeignKey('ad_vehicles.uuid',onupdate='CASCADE',ondelete='CASCADE'), primary_key=True)
+    photo_uuid: str = Column(String, ForeignKey('storages.uuid',onupdate='CASCADE',ondelete='CASCADE'), primary_key=True)
 
-    ad_uuid: str = Column(String, ForeignKey('ads.uuid'), primary_key=True)
-    photo_uuid: str = Column(String, ForeignKey('storages.uuid'), primary_key=True)
-
-    ad = relationship('Ad', back_populates='photos')
+    ad_vehicle = relationship('AdVehicle', back_populates='photos')
     photo = relationship('Storage')
 
 @dataclass
-class AdReview(TimestampMixin,Base):
+class AdReview(TimesTampMixin,Base):
     __tablename__ = 'ad_reviews'
 
-    user_uuid: str = Column(String, ForeignKey('users.uuid'), primary_key=True)
-    ad_uuid: str = Column(String, ForeignKey('ads.uuid'), primary_key=True)
+    user_uuid: str = Column(String, ForeignKey('users.uuid',onupdate='CASCADE',ondelete='CASCADE'), primary_key=True)
+    ad_uuid: str = Column(String, ForeignKey('ads.uuid',onupdate='CASCADE',ondelete='CASCADE'), primary_key=True)
     rating: float = Column(Float, nullable=False)
     comment: str = Column(Text, nullable=True)
    

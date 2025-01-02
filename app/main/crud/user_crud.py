@@ -16,10 +16,13 @@ class CRUDUser(CRUDBase[models.User, schemas.AdministratorCreate,schemas.Adminis
 
     @classmethod
     def get_by_uuid(cls, db: Session, uuid: str) -> Union[models.User, None]:
-        return db.query(models.User).\
+        user = db.query(models.User).\
             filter(models.User.uuid == uuid,
                    models.User.status==models.EnumList.ACTIVED
                 ).first()
+        
+        print("user12345",user)
+        return user
     
     @classmethod
     def create(cls, db: Session, obj_in: schemas.AdministratorCreate,current_user:Optional[models.User]= None) -> models.User:
@@ -52,7 +55,8 @@ class CRUDUser(CRUDBase[models.User, schemas.AdministratorCreate,schemas.Adminis
         administrator.email = obj_in.email if obj_in.email else administrator.email
         administrator.role_uuid = obj_in.role_uuid if obj_in.role_uuid else administrator.role_uuid
         administrator.avatar_uuid = obj_in.avatar_uuid if obj_in.avatar_uuid else administrator.avatar_uuid
-        administrator.password_hash = get_password_hash(obj_in.password) if obj_in.password else administrator.password_hash
+        administrator.address = obj_in.address if obj_in.address else administrator.address
+        administrator.phonenumber = obj_in.phonenumber if obj_in.phonenumber else administrator.phonenumber
 
         db.commit()
         db.refresh(administrator)

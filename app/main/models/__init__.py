@@ -7,6 +7,7 @@ from .ad import *
 from .payment import *
 from .vehicle import *
 from .notification import *
+from .brand import Brand
 
 
 

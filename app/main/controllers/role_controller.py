@@ -1,10 +1,8 @@
-from app.main.core.dependencies import get_db, TokenRequired
-from app.main import schemas, crud, models
+from app.main.core.dependencies import get_db
+from app.main import schemas, crud
 from app.main.core.i18n import __
-from app.main.core.config import Config
-from fastapi import APIRouter, Depends, Body, HTTPException, Query
+from fastapi import APIRouter, Depends,HTTPException
 from sqlalchemy.orm import Session
-from typing import Optional
 router = APIRouter(prefix="/roles", tags=["roles"])
 
 
