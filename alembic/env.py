@@ -35,7 +35,7 @@ target_metadata = Base.metadata
 # ... etc.
 
 def get_url():
-    return get_secret("SQLALCHEMY_DATABASE_URL",'postgresql://postgres:postgres@localhost:5432/location_auto')
+    return get_secret("SQLALCHEMY_DATABASE_URL",'postgresql://admin:kafc6yoUn9B1mo12yg8prvoweaElpjl5@dpg-ctr2a2i3esus73b8v65g-a/tp331_carshop_database')
     # return get_secret("SQLALCHEMY_DATABASE_URL",'postgresql://archive_doc_app_user:nfbm212vPcQGBIGa5gKMf2hPqS7pEKs0@dpg-cqtdnprv2p9s73de27fg-a.oregon-postgres.render.com/archive_doc_app')
 
 def run_migrations_offline():
