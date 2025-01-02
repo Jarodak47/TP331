@@ -4,10 +4,10 @@ from datetime import datetime
 from sqlalchemy import Column, DateTime, String, event
 
 from app.main.models.db.base_class import Base
-from .base import TimestampMixin
+from .base import TimesTampMixin
 
 @dataclass
-class BlacklistToken(TimestampMixin,Base):
+class BlacklistToken(TimesTampMixin,Base):
     __tablename__ = 'blacklist_tokens'
 
     uuid = Column(String, primary_key=True, unique=True)

@@ -249,5 +249,88 @@ ALTER TABLE IF EXISTS public.users
     REFERENCES public.roles (uuid) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION;
-
 END;
+
+ALTER TABLE IF EXISTS public.brands
+    ADD COLUMN status enumlist NOT NULL DEFAULT 'NONE';
+
+
+-- requete pour migration
+
+ALTER TYPE public.enumlist
+    ADD VALUE 'ACTIVED' IF NOT EXISTS;
+    ADD VALUE 'UNACTIVED' IF NOT EXISTS;
+    ADD VALUE 'DELETED' IF NOT EXISTS;
+    ADD VALUE 'BLOCKED' IF NOT EXISTS;
+    ADD VALUE 'RENTAL' IF NOT EXISTS;
+    ADD VALUE 'PURCHASE' IF NOT EXISTS;
+    ADD VALUE 'SALE' IF NOT EXISTS;
+    ADD VALUE 'BOOKING' IF NOT EXISTS;
+    ADD VALUE 'NONE' IF NOT EXISTS;
+    ADD VALUE 'AVAILABLE' IF NOT EXISTS;
+
+DO $$
+
+BEGIN
+
+    IF NOT EXISTS (SELECT 1 FROM pg_enum WHERE enumlabel = 'ACTIVED' AND enumtypid = 'enumlist'::regtype) THEN
+
+        ALTER TYPE public.enumlist ADD VALUE 'ACTIVED';
+
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_enum WHERE enumlabel = 'UNACTIVED' AND enumtypid = 'enumlist'::regtype) THEN
+
+        ALTER TYPE public.enumlist ADD VALUE 'UNACTIVED';
+
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_enum WHERE enumlabel = 'DELETED' AND enumtypid = 'enumlist'::regtype) THEN
+
+        ALTER TYPE public.enumlist ADD VALUE 'DELETED';
+
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_enum WHERE enumlabel = 'BLOCKED' AND enumtypid = 'enumlist'::regtype) THEN
+
+        ALTER TYPE public.enumlist ADD VALUE 'BLOCKED';
+
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_enum WHERE enumlabel = 'RENTAL' AND enumtypid = 'enumlist'::regtype) THEN
+
+        ALTER TYPE public.enumlist ADD VALUE 'RENTAL';
+
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_enum WHERE enumlabel = 'PURCHASE' AND enumtypid = 'enumlist'::regtype) THEN
+
+        ALTER TYPE public.enumlist ADD VALUE 'PURCHASE';
+
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_enum WHERE enumlabel = 'SALE' AND enumtypid = 'enumlist'::regtype) THEN
+
+        ALTER TYPE public.enumlist ADD VALUE 'SALE';
+
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_enum WHERE enumlabel = 'BOOKING' AND enumtypid = 'enumlist'::regtype) THEN
+
+        ALTER TYPE public.enumlist ADD VALUE 'BOOKING';
+
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_enum WHERE enumlabel = 'NONE' AND enumtypid = 'enumlist'::regtype) THEN
+
+        ALTER TYPE public.enumlist ADD VALUE 'NONE';
+
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_enum WHERE enumlabel = 'AVAILABLE' AND enumtypid = 'enumlist'::regtype) THEN
+
+        ALTER TYPE public.enumlist ADD VALUE 'AVAILABLE';
+
+    END IF;
+
+END $$;

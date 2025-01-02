@@ -3,11 +3,12 @@ from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from typing import Any, Dict, Generic, Optional, Type, TypeVar, Union
 
-from sqlalchemy import or_
+from sqlalchemy import or_,asc,desc
 from sqlalchemy.orm import Session
 
 from app.main.models.db.base_class import Base
 from app.main import schemas, models
+
 
 ModelType = TypeVar("ModelType", bound=Base)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
@@ -26,14 +27,40 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         self.model = model
 
     def get(self, db: Session, uuid: Any) -> Optional[ModelType]:
-        return db.query(self.model).filter(self.model.uuid == uuid).first()
+        return db.query(self.model).filter(self.model.uuid == uuid,self.model.status!='DELETED').first()
 
     def get_multi(
-            self, db: Session, *, page: int = 0, per_page: int = 20
+            self, db: Session, *, page: int = 0, per_page: int = 20,filters: Optional[Dict[str, Any]]
     ) -> schemas.DataList:
 
-        total = db.query(self.model).count()
-        result = db.query(self.model).offset((page - 1) * per_page).limit(per_page).all()
+        order_filed = filters.get('order_filed', 'date_added')
+        order = filters.get('order', 'desc')
+        
+        try:
+            query = db.query(self.model).filter(self.model.status!='DELETED')
+        except:
+            query = db.query(self.model)
+            
+        if filters:
+            for key, value in filters.items():
+                if hasattr(self.model, key):
+                    column_attr = getattr(self.model, key)
+                    query = query.filter(getattr(self.model, key) == value)
+                    if isinstance(value, str):
+                        query = query.filter(column_attr.ilike('%' + str(value) + '%'))
+                    else:    
+                        query = query.filter(column_attr == value)
+
+            if order_filed:
+                if hasattr(self.model, order_filed):    
+                    if order == 'asc':
+                        query = query.order_by(asc(getattr(self.model, order_filed)))
+                    else:
+                        query = query.order_by(desc(getattr(self.model, order_filed)))
+                                  
+        total = query.count()
+        result = query.offset((page - 1) * per_page).limit(per_page).all()
+        
         return schemas.DataList(
             total=total,    
             pages=math.ceil(total / per_page),
@@ -42,7 +69,6 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             data=result
         )
 
-    @staticmethod
     def create(self, db: Session, obj_in: CreateSchemaType) -> ModelType:
         obj_in_data = jsonable_encoder(obj_in)
         db_obj = self.model(**obj_in_data)  # type: ignore
@@ -71,8 +97,24 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         db.refresh(db_obj)
         return db_obj
 
-    def remove(self, db: Session, *, uuid: int) -> ModelType:
+    def remove(self, db: Session, *, uuid: Any) -> ModelType:
         obj = db.query(self.model).get(uuid)
         db.delete(obj)
         db.commit()
         return obj
+    
+    def soft_delete(self, db: Session, *, uuid: Any) -> ModelType:
+        obj = db.query(self.model).get(uuid)
+        # if isinstance(uuid,list):
+        #     for uuid in uuid:
+        #         obj = db.query(self.model).get(uuid)
+        #         obj.status = models.EnumList.DELETED
+        # else:
+        #     obj.status = models.EnumList.DELETED
+
+        obj.status = models.EnumList.DELETED
+        db.commit()
+        return obj
+    
+    def slugify(cls, text:str):
+        return text.lower().replace(" ","-")

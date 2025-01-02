@@ -31,7 +31,7 @@ class ConfigClass(BaseSettings):
 
 
     # Sqlalchemy
-    SQLALCHEMY_DATABASE_URL: str = get_secret("SQLALCHEMY_DATABASE_URL",'postgresql://postgres:postgres@localhost:5432/location_auto')
+    SQLALCHEMY_DATABASE_URL: str = get_secret("SQLALCHEMY_DATABASE_URL",'postgresql://postgres:postgres@localhost:5432/test_autolocate')
     # SQLALCHEMY_DATABASE_URL: str = get_secret("SQLALCHEMY_DATABASE_URL", 'postgresql://postgres:postgres@localhost:5432/archive_doc_app')
     SQLALCHEMY_POOL_SIZE: int = 100
     SQLALCHEMY_MAX_OVERFLOW: int = 0
@@ -72,6 +72,12 @@ class ConfigClass(BaseSettings):
     IMAGE_THUMBNAIL_WIDTH: int = get_secret("IMAGE_THUMBNAIL_WIDTH", 300)
 
     UPLOADED_FILE_DEST: str = get_secret("UPLOADED_FILE_DEST", "uploads")
+
+    BRAINTREE_MERCHANT_ID: str = get_secret("BRAINTREE_MERCHANT_ID", "mdrfb3r4g663vhwd")
+    BRAINTREE_PUBLIC_KEY: str = get_secret("BRAINTREE_PUBLIC_KEY", "f4gr5f2vrfmxzsfp")
+    BRAINTREE_PRIVATE_KEY: str = get_secret("BRAINTREE_PRIVATE_KEY", "5ac4d23220e51863f5a57a829152f8c1")
+    BRAINTREE_ENVIRONMENT: str = get_secret("BRAINTREE_ENVIRONMENT", "sandbox")  # ou "production"
+
 
     class Config:
         case_sensitive = True

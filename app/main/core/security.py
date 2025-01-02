@@ -2,6 +2,8 @@ import re
 import string
 import random
 import jwt
+from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
+
 import bcrypt
 import unicodedata
 from datetime import timedelta, datetime
@@ -54,12 +56,15 @@ def decode_access_token(token: str):
     try:
         decoded_token = jwt.decode(token, Config.SECRET_KEY, algorithms=[ALGORITHM])
         return decoded_token
+    except ExpiredSignatureError:
+        print("Token has expired")
+    except InvalidTokenError:
+        print("Invalid token")
     except Exception as e:
-        if token:
-            print("Failed to decode token")
-            print(token)
-            print(e)
-        return None
+        print("Failed to decode token")
+        print("token:", token)
+        print(e)
+    return None
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:

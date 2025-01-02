@@ -37,7 +37,7 @@ def create(
 
 
 @router.post("/register",summary = "register for customer", response_model=schemas.AdministratorResponse, status_code=200)
-def create(
+def register(
     *,
     db: Session = Depends(get_db),
     obj_in:schemas.AdministratorCreate,
@@ -89,12 +89,12 @@ def create(
     
 #     return crud.user.create(db, obj_in,current_user)
 
-@router.post("/", response_model=schemas.AdministratorResponse, status_code=201)
+@router.put("", response_model=schemas.AdministratorResponse, status_code=201)
 def update(
     *,
     db: Session = Depends(get_db),
     obj_in:schemas.AdministratorUpdate,
-    current_user:models.User = Depends(TokenRequired(roles =["administrator"] ))
+    current_user:models.User = Depends(TokenRequired(roles =[] ))
 ):
     """
     Update new administrator
@@ -175,9 +175,12 @@ def get(
     """
     get administrator with all data by passing filters
     """
-    
-    return crud.user.get_by_uuid(
+    db_obj = crud.user.get_by_uuid(
         db, 
         user_uuid
     )
     
+    if not db_obj:
+        raise HTTPException(status_code=404, detail=__("user-not-found"))
+    
+    return db_obj
